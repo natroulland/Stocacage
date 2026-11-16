@@ -474,7 +474,7 @@ export default function ImageList() {
     }
   }, [renamingFolder]);
 
-  // Drag start on a card
+  // Drag start on a card: e.preventDefault() is required for native OLE drag into Discord/Slack/Explorer
   const handleDragStart = async (e: React.DragEvent, item: VaultMedia) => {
     isInternalDragRef.current = true;
     draggedMediaRef.current = item;
@@ -485,10 +485,20 @@ export default function ImageList() {
       e.dataTransfer.effectAllowed = "copyMove";
     }
 
+    e.preventDefault();
+
     try {
-      await startDrag({ item: [item.path], icon: item.path });
+      await startDrag({
+        item: [item.path],
+        icon: item.media_type === "video" ? "" : item.path,
+      });
     } catch (err) {
       console.error("startDrag error:", err);
+    } finally {
+      setTimeout(() => {
+        isInternalDragRef.current = false;
+        draggedMediaRef.current = null;
+      }, 250);
     }
   };
 

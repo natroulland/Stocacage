@@ -1,6 +1,7 @@
 use std::sync::atomic::{AtomicBool, Ordering};
 use tauri::{
     Manager,
+    menu::{Menu, MenuItem},
     tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent},
 };
 use tauri_plugin_positioner::{Position, WindowExt};
@@ -625,9 +626,34 @@ pub fn run() {
         .plugin(tauri_plugin_positioner::init())
         .plugin(tauri_plugin_opener::init())
         .setup(move |app| {
+            let show_i = MenuItem::with_id(app, "show", "Ouvrir Stocacage", true, None::<&str>)?;
+            let folder_i = MenuItem::with_id(app, "open_folder", "Ouvrir le dossier", true, None::<&str>)?;
+            let quit_i = MenuItem::with_id(app, "quit", "Quitter Stocacage", true, None::<&str>)?;
+            let menu = Menu::with_items(app, &[&show_i, &folder_i, &quit_i])?;
+
             let _tray = TrayIconBuilder::new()
                 .icon(app.default_window_icon().unwrap().clone())
                 .tooltip("Stocacage")
+                .menu(&menu)
+                .show_menu_on_left_click(false)
+                .on_menu_event(move |app, event| match event.id.as_ref() {
+                    "quit" => {
+                        app.exit(0);
+                    }
+                    "show" => {
+                        if let Some(window) = app
+                            .get_webview_window("stocacage")
+                            .or_else(|| app.get_webview_window("main"))
+                        {
+                            let _ = window.show();
+                            let _ = window.set_focus();
+                        }
+                    }
+                    "open_folder" => {
+                        let _ = open_vault_folder(app.clone(), None);
+                    }
+                    _ => {}
+                })
                 .on_tray_icon_event(move |tray, event| {
                     if let TrayIconEvent::Click {
                         button: MouseButton::Left,
