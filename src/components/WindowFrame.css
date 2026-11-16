@@ -1,0 +1,173 @@
+.window-frame {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+/* Resize handles for frameless window */
+.resize-handle {
+  position: absolute;
+  z-index: 9999;
+}
+
+.resize-handle.top {
+  top: 0;
+  left: 10px;
+  right: 48px;
+  height: 6px;
+  cursor: ns-resize;
+}
+
+.resize-handle.bottom {
+  bottom: 0;
+  left: 10px;
+  right: 14px;
+  height: 6px;
+  cursor: ns-resize;
+}
+
+.resize-handle.left {
+  top: 10px;
+  bottom: 10px;
+  left: 0;
+  width: 6px;
+  cursor: ew-resize;
+}
+
+.resize-handle.right {
+  top: 34px;
+  bottom: 14px;
+  right: 0;
+  width: 6px;
+  cursor: ew-resize;
+}
+
+.resize-handle.top-left {
+  top: 0;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  cursor: nwse-resize;
+}
+
+.resize-handle.bottom-left {
+  bottom: 0;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  cursor: nesw-resize;
+}
+
+.resize-handle.bottom-right {
+  bottom: 0;
+  right: 0;
+  width: 14px;
+  height: 14px;
+  cursor: nwse-resize;
+}
+
+/* Titlebar */
+.titlebar {
+  height: 32px;
+  background: transparent;
+  user-select: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  z-index: 1000;
+  flex-shrink: 0;
+  cursor: default;
+}
+
+.titlebar-drag-region {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding-left: 12px;
+}
+
+.window-title {
+  font-size: 0.82rem;
+  font-weight: 500;
+  opacity: 0.75;
+  pointer-events: none;
+}
+
+button.titlebar-button {
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  margin: 0;
+  width: 44px;
+  height: 32px;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  flex-shrink: 0;
+}
+
+button.titlebar-button:hover {
+  background-color: rgba(128, 128, 128, 0.2);
+  border-color: transparent;
+}
+
+button.titlebar-button:active {
+  background-color: rgba(128, 128, 128, 0.35);
+  border-color: transparent;
+}
+
+.minimize-icon {
+  width: 12px;
+  height: 1.5px;
+  background-color: currentColor;
+  border-radius: 1px;
+  display: block;
+  pointer-events: none;
+}
+
+/* Visual resize grip indicator */
+.resize-grip {
+  position: absolute;
+  bottom: 3px;
+  right: 3px;
+  width: 10px;
+  height: 10px;
+  pointer-events: none;
+  opacity: 0.35;
+  transition: opacity 0.2s ease;
+}
+
+.window-frame:hover .resize-grip {
+  opacity: 0.7;
+}
+
+@media (prefers-color-scheme: dark) {
+  .window-frame {
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+
+  button.titlebar-button {
+    background: transparent;
+  }
+
+  button.titlebar-button:hover {
+    background-color: rgba(255, 255, 255, 0.12);
+  }
+
+  button.titlebar-button:active {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+}
